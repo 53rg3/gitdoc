@@ -1,62 +1,22 @@
 <!--- PROJECT_TOC -->
-
-# GitDoc
-
-CLI tool for automatic TOC creation and reference checking in MarkDown files. For writing docs and notebooks in Git remote repositories.
-
-## Run
-
-1. Download or build JAR
-2. Execute via `java -jar gitdoc.jar`
-
-### Options
-
-#### -p / --path (Set the folder gitdoc shall work in) 
-
-:mag:  Note: Mandatory parameter
-
-:mag:  Note: The folder must exist.
-
-```bash
-java -jar gitdoc.jar -p=/absolute/path/to/gitdoc_folder
-```
-
-#### -s / --scaffold (Create a scaffold folder)
-
-```bash
-java -jar gitdoc.jar -p=/absolute/path/to -s=gitdoc_folder
-```
-
-### Usage with alias
-
-Alias which automatically uses the current folder from which `gitdoc` alias is executed:
-
-```BASH
-alias gitdoc='java -jar /absolute/path/to/gitdoc.jar -p="$PWD"'
-```
-
-
-
-### Markers
-
-#### .gitdoc file
-
-Your gitdoc folder must contain a file named `.gitdoc`. Otherwise gitdoc will refuse to work.
-
-#### File TOC
-
-This will place the TOC of that file on that position.
-
-```html
-<!--- FILE_TOC -->
-```
-
-#### Project TOC
-
-This will place a TOC of **ALL** headings in MarkDown files in the gitdoc folder. Best place is the index file of your gitdoc folder.
-
-```html
-<!--- FILE_TOC -->
+[1. GitDoc](readme.md#gitdoc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Run](readme.md#run)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.1 Options](readme.md#options)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.1.1 -p / --path (Set the folder gitdoc shall work in)](readme.md#-p----path-set-the-folder-gitdoc-shall-work-in)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.1.2 -s / --scaffold (Create a scaffold folder)](readme.md#-s----scaffold-create-a-scaffold-folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.2 Usage with alias](readme.md#usage-with-alias)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.3 Markers](readme.md#markers)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.3.1 .gitdoc file](readme.md#gitdoc-file)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.3.2 File TOC](readme.md#file-toc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.3.3 Project TOC](readme.md#project-toc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.4 Understanding sorting of TOCs](readme.md#understanding-sorting-of-tocs)<br>
+[2. Main Header](readme.md#main-header)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1 Sub Header](readme.md#sub-header)<br>
+[3. Main Header](readme.md#main-header)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1 Sub Header](readme.md#sub-header)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.1 Possible problems](readme.md#possible-problems)<br>
+[4. Program Structure](001_Program_Structure/readme.md#program-structure)<br>
+<!--- TOC_END -->
 ```
 
 ### Understanding sorting of TOCs
