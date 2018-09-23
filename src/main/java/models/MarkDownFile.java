@@ -115,7 +115,4 @@ public class MarkDownFile {
         return this.path;
     }
 
-    public Path getGitdocFolder() {
-        return this.gitdocFolder;
-    }
 }

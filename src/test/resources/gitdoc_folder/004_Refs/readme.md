@@ -6,7 +6,7 @@ List:
 
 - Proin iaculis lacus
 - placerat nulla
-  Nullam rutrum rhoncus [file in same folder](sub/file_in_same_folder.md)[asdf](asdf.md) justo in egestas. Nulla gravida imperdiet tempus
+  Nullam rutrum rhoncus [file in same folder](sub/file_in_sub_folder.md)[asdf](asdf.md) justo in egestas. Nulla gravida imperdiet tempus
 - Sed vitae
 - [external link](https://www.google.com)[doesn't work](../does-not-exist.md)
 

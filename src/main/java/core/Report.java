@@ -44,7 +44,7 @@ public class Report {
             this.refReport.append(Config.refsHeader);
         }
         this.brokenRefCount.addAndGet(brokenRefs.size());
-        this.refReport.append("Broken Refs in ");
+        this.refReport.append("\n-----> Broken Refs in ");
         this.refReport.append(path);
         this.refReport.append("\n");
         brokenRefs.forEach(ref -> {

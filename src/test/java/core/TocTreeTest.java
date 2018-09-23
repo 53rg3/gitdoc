@@ -49,7 +49,7 @@ public class TocTreeTest {
         assertThat(toc.get(24),
                 is("[5. References](004_Refs/readme.md#references)<br>"));
         assertThat(toc.get(25),
-                is("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[5.1 File in same folder](004_Refs/sub/file_in_same_folder.md#file-in-same-folder)<br>"));
+                is("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[5.1 File in sub folder](004_Refs/sub/file_in_sub_folder.md#file-in-sub-folder)<br>"));
 
     }
 

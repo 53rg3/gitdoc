@@ -36,6 +36,6 @@ public class MarkDownFileTest {
         Report report = new Report();
         markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPath()), report);
         assertThat(report.getReport().contains("Valid references  : 5"), is(true));
-        assertThat(report.getReport().contains("Broken references : 3"), is(true));
+        assertThat(report.getReport().contains("Broken references : 2"), is(true));
     }
 }
