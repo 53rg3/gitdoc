@@ -10,7 +10,6 @@ project/target
 .idea/*
 .g8/
 .gradle/
-*.jar
 *.war
 *.iml
 server.pid

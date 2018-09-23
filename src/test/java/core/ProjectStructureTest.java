@@ -11,7 +11,7 @@ public class ProjectStructureTest {
     @Test
     public void walkGitDoc_success() {
         ProjectStructure projectStructure = new ProjectStructure(TestHelpers.getResourcePath("gitdoc_folder"));
-        assertThat(projectStructure.getStructure().size(), is(5));
+        assertThat(projectStructure.getStructure().size(), is(6));
     }
 
     @Test(expected = IllegalStateException.class)

@@ -1,21 +1,30 @@
 package core;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Report {
 
     private final StringBuilder tocReport = new StringBuilder();
     private final StringBuilder refReport = new StringBuilder();
+
+    private boolean hasTocs = false;
+    private boolean hasRefs = false;
+
     private final AtomicInteger hasTocCount = new AtomicInteger();
     private final AtomicInteger noTocCount = new AtomicInteger();
+    private final AtomicInteger validRefCount = new AtomicInteger();
+    private final AtomicInteger brokenRefCount = new AtomicInteger();
 
-    Report() {
-        this.tocReport.append(Config.tocsHeader);
-        this.refReport.append(Config.refsHeader);
+    public Report() {
     }
 
     public void hasToc(Path path) {
+        if (!this.hasTocs) {
+            this.hasTocs = true;
+            this.tocReport.append(Config.tocsHeader);
+        }
         this.hasTocCount.incrementAndGet();
         this.tocReport.append("[+] Added TOC to  : ");
         this.tocReport.append(path);
@@ -29,15 +38,36 @@ public class Report {
         this.tocReport.append("\n");
     }
 
-    private String getTocReportAsString() {
-        String counters = "\nCOUNTS:\n" +
+    public void brokenRefs(Path path, List<String> brokenRefs) {
+        if (!this.hasRefs) {
+            this.hasRefs = true;
+            this.refReport.append(Config.refsHeader);
+        }
+        this.brokenRefCount.addAndGet(brokenRefs.size());
+        this.refReport.append("Broken Refs in ");
+        this.refReport.append(path);
+        this.refReport.append("\n");
+        brokenRefs.forEach(ref -> {
+            this.refReport.append(ref);
+            this.refReport.append("\n");
+        });
+    }
+
+    public void validRef() {
+        this.validRefCount.incrementAndGet();
+    }
+
+    private String getBreakdownsAsString() {
+        String tocBreakdown = "\nTOC BREAKDOWN:\n" +
                 "Files with TOCs   : " + this.hasTocCount.get() + "\n" +
                 "Files without TOCs: " + this.noTocCount.get() + "\n";
-        this.tocReport.append(counters);
-        return this.tocReport.toString();
+        String refBreakdown = "\nREF BREAKDOWN:\n" +
+                "Valid references  : " + this.validRefCount.get() + "\n" +
+                "Broken references : " + this.brokenRefCount.get() + "\n";
+        return Config.breakdownHeader + tocBreakdown + refBreakdown;
     }
 
     public String getReport() {
-        return this.getTocReportAsString() + this.refReport.toString();
+        return this.tocReport.toString() + this.refReport.toString() + this.getBreakdownsAsString();
     }
 }

@@ -1,6 +1,8 @@
 package models;
 
 import _testutils.TestHelpers;
+import core.Helpers;
+import core.Report;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,7 +15,7 @@ public class MarkDownFileTest {
     @Test
     public void create() {
 
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.TEST_FILE);
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getGitFolder(), TestHelpers.TEST_FILE);
 
         // Headings
         List<String> headings = markDownFile.getHeadings();
@@ -24,8 +26,16 @@ public class MarkDownFileTest {
         assertThat(headings.get(3), is("#### Sub-Sub-Sub-Heading"));
 
         // Parent folder
-        assertThat(markDownFile.getParentFolder().toString().endsWith("/gitdoc_folder/002_SecondChapter"), is(true));
+        assertThat(markDownFile.getParentFolder().endsWith("/gitdoc_folder/002_SecondChapter"), is(true));
 
     }
 
+    @Test
+    public void evaluateReferences() {
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getGitFolder(), TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"));
+        Report report = new Report();
+        markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPath()), report);
+        assertThat(report.getReport().contains("Valid references  : 5"), is(true));
+        assertThat(report.getReport().contains("Broken references : 3"), is(true));
+    }
 }

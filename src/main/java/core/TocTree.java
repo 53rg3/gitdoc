@@ -3,6 +3,7 @@ package core;
 import core.Config.TocType;
 import models.MarkDownFile;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,18 +15,20 @@ public class TocTree {
 
     private static final Pattern everythingButHashesPattern = Pattern.compile("[^#]");
     private static final Pattern onlyHashesPattern = Pattern.compile("[#]");
+    private final static Pattern specialChars = Pattern.compile("[^\\d\\w\\s-]");
     private final List<AtomicInteger> numerationList = new ArrayList<>();
     private final List<String> toc;
+    private final Path gitdocFolder;
 
-    public TocTree(List<MarkDownFile> list) {
+    public TocTree(List<MarkDownFile> list, Path gitdocFolder) {
+        this.gitdocFolder = gitdocFolder;
         this.resetNumerationList();
-
         this.toc = this.createTocTree(list);
     }
 
     public TocTree(MarkDownFile markDownFile) {
+        this.gitdocFolder = markDownFile.getPath();
         this.resetNumerationList();
-
         this.toc = this.createTocTree(Collections.singletonList(markDownFile));
     }
 
@@ -41,15 +44,50 @@ public class TocTree {
         return everythingButHashesPattern.matcher(heading).replaceAll("");
     }
 
-    private String createNumeration(String heading) {
+    /**
+     * Proper GitHub compliant MarkDown reference: [1.1 Anchor Text](path/to/ref/readme.md#Anchor-Text)
+     */
+    private String createReference(String heading, Path path) {
         Objects.requireNonNull(heading, "heading must not be null");
 
         String cleanHeading = onlyHashesPattern.matcher(heading).replaceAll("").trim();
         int blocks = extractHashes(heading).length();
         StringBuilder builder = new StringBuilder();
 
-        // Add indention
-        builder.append(this.getIndention(blocks));
+        // Add link text
+        this.createLinkText(builder, cleanHeading, blocks);
+
+        // Add reference destination
+        this.createReferenceDestination(builder, cleanHeading, path);
+
+        // Prepend indention
+        builder.insert(0, this.getIndention(blocks));
+
+        return builder.toString();
+    }
+
+    private void createReferenceDestination(StringBuilder builder, String cleanHeading, Path path) {
+        // Open reference destination bracket
+        builder.append("(");
+
+        // Create relative path from gitdocFolder
+        builder.append(this.gitdocFolder.relativize(path));
+
+        // Create link fragment
+        builder.append("#");
+        builder.append(this.createAnchor(cleanHeading));
+
+
+        // Close reference destination bracket
+        builder.append(")");
+
+        // Add <br>
+        builder.append("<br>");
+    }
+
+    private void createLinkText(StringBuilder builder, String cleanHeading, int blocks) {
+        // Open link text bracket
+        builder.append("[");
 
         // Create numeration
         for (int index = 0; index < blocks; index++) {
@@ -75,7 +113,9 @@ public class TocTree {
         builder.append(" ");
         builder.append(cleanHeading);
 
-        return builder.toString();
+        // Close anchor text bracket
+        builder.append("]");
+
     }
 
     private String getIndention(int blocks) {
@@ -92,7 +132,7 @@ public class TocTree {
 
         for (MarkDownFile markDownFile : list) {
             for (String heading : markDownFile.getHeadings()) {
-                result.add(this.createNumeration(heading));
+                result.add(this.createReference(heading, markDownFile.getPath()));
             }
         }
 
@@ -124,5 +164,13 @@ public class TocTree {
         builder.append(Config.TOC_END_MARKER);
 
         return builder.toString();
+    }
+
+    private String createAnchor(String heading) {
+        heading = specialChars.matcher(heading).replaceAll("");
+        return heading
+                .replace(".", "")
+                .replace(" ", "-")
+                .toLowerCase();
     }
 }

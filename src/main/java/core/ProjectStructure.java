@@ -10,9 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class ProjectStructure {
@@ -20,35 +18,52 @@ public class ProjectStructure {
     private final List<MarkDownFile> structure;
     private final TocTree tocTree;
     private final Report report = new Report();
-    private final RefEvaluator refEvaluator = new RefEvaluator(this.report);
 
-    public ProjectStructure(Path path) {
-        this.structure = this.createStructure(path);
-        this.tocTree = new TocTree(this.structure);
+    public ProjectStructure(Path gitdocFolder) {
+        this.structure = this.createStructure(gitdocFolder);
+        this.tocTree = new TocTree(this.structure, gitdocFolder);
     }
 
     public void run() {
         for (MarkDownFile markDownFile : this.structure) {
-
             String fileAsString = Helpers.getFileAsString(markDownFile.getPath());
+
+            markDownFile.evaluateReferences(fileAsString, this.report);
 
             this.writeToc(markDownFile, fileAsString);
         }
 
     }
 
-    private List<MarkDownFile> createStructure(Path path) {
+    private List<MarkDownFile> createStructure(Path gitdocFolder) {
 
-        this.throwIfNotGitDocFolder(path);
+        this.throwIfNotGitDocFolder(gitdocFolder);
 
         List<MarkDownFile> list = new ArrayList<>();
-        try (Stream<Path> stream = Files.walk(path)) {
+        Set<String> exclusions = new HashSet<>();
+
+        // Root folder
+        try (Stream<Path> stream = Files.walk(gitdocFolder, 1)) {
             stream
                     .filter(currPath -> currPath.toString().endsWith(".md"))
                     .sorted()
-                    .forEach(currPath -> list.add(new MarkDownFile(currPath)));
+                    .forEach(currPath -> {
+                        exclusions.add(currPath.toString());
+                        list.add(new MarkDownFile(gitdocFolder, currPath));
+                    });
         } catch (IOException e) {
-            throw new IllegalStateException("Can't walk path: " + path);
+            throw new IllegalStateException("Can't walk path: " + gitdocFolder);
+        }
+
+        // Subfolders
+        try (Stream<Path> stream = Files.walk(gitdocFolder)) {
+            stream
+                    .filter(currPath -> currPath.toString().endsWith(".md"))
+                    .filter(currPath -> !exclusions.contains(currPath.toString()))
+                    .sorted()
+                    .forEach(currPath -> list.add(new MarkDownFile(gitdocFolder, currPath)));
+        } catch (IOException e) {
+            throw new IllegalStateException("Can't walk path: " + gitdocFolder);
         }
 
         return list;

@@ -1,11 +1,12 @@
 package _testutils;
 
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class TestHelpers {
 
-    public static final Path TEST_FILE = Paths.get("/home/cc/Desktop/Programming/Repos/gitdoc/target/test-classes/gitdoc_folder/002_SecondChapter/readme.md");
+    public static final Path TEST_FILE = Paths.get(getResourcePath("gitdoc_folder/002_SecondChapter/readme.md").toString());
 
     public static Path getResourcePath(String pathToResource) {
         final URL path = ClassLoader.getSystemResource(pathToResource);
@@ -15,6 +16,10 @@ public class TestHelpers {
                     "Don't use the absolute path! Use: \"some/folder/someFile.csv\"");
         }
         return Paths.get(path.getPath());
+    }
+
+    public static Path getGitFolder() {
+        return getResourcePath("gitdoc_folder");
     }
 
 }
