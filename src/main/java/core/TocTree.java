@@ -27,7 +27,7 @@ public class TocTree {
     }
 
     public TocTree(MarkDownFile markDownFile) {
-        this.gitdocFolder = markDownFile.getPath();
+        this.gitdocFolder = markDownFile.getPathToFile();
         this.resetNumerationList();
         this.toc = this.createTocTree(Collections.singletonList(markDownFile));
     }
@@ -132,7 +132,7 @@ public class TocTree {
 
         for (MarkDownFile markDownFile : list) {
             for (String heading : markDownFile.getHeadings()) {
-                result.add(this.createReference(heading, markDownFile.getPath()));
+                result.add(this.createReference(heading, markDownFile.getPathToFile()));
             }
         }
 
@@ -162,6 +162,7 @@ public class TocTree {
             builder.append("\n");
         }
         builder.append(Config.TOC_END_MARKER);
+        builder.append("\n");
 
         return builder.toString();
     }

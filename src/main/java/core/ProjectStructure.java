@@ -6,15 +6,11 @@ import models.MarkDownFile;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 public class ProjectStructure {
@@ -30,7 +26,7 @@ public class ProjectStructure {
 
     public void run() {
         for (MarkDownFile markDownFile : this.structure) {
-            String fileAsString = Helpers.getFileAsString(markDownFile.getPath());
+            String fileAsString = Helpers.getFileAsString(markDownFile.getPathToFile());
 
             markDownFile.evaluateReferences(fileAsString, this.report);
 
@@ -93,24 +89,25 @@ public class ProjectStructure {
     private void writeToc(MarkDownFile markDownFile, String fileAsString) {
         if (markDownFile.hasTocMarker()) {
 
-            this.report.hasToc(markDownFile.getPath());
+            this.report.hasToc(markDownFile.getPathToFile());
 
-            try (BufferedWriter writer = this.createWriter(markDownFile.getPath())) {
+            try (BufferedWriter writer = this.createWriter(markDownFile.getPathToFile())) {
 
-
+                // Replace TOCs
                 fileAsString = Config.fileTocPattern
                         .matcher(fileAsString)
-                        .replaceAll(markDownFile.getTocTree().getAsString(TocType.FILE_TOC));
+                        .replaceFirst(markDownFile.getTocTree().getAsString(TocType.FILE_TOC));
                 fileAsString = Config.projectTocPattern
                         .matcher(fileAsString)
-                        .replaceAll(this.tocTree.getAsString(TocType.PROJECT_TOC));
+                        .replaceFirst(this.tocTree.getAsString(TocType.PROJECT_TOC));
 
                 writer.write(fileAsString);
+
             } catch (IOException e) {
-                throw new IllegalStateException("Couldn't write to file: " + markDownFile.getPath(), e);
+                throw new IllegalStateException("Couldn't write to file: " + markDownFile.getPathToFile(), e);
             }
         } else {
-            this.report.noToc(markDownFile.getPath());
+            this.report.noToc(markDownFile.getPathToFile());
         }
     }
 

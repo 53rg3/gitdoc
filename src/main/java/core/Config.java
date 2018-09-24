@@ -14,8 +14,9 @@ public class Config {
     // ------------------------------------------------------------------------------------------ //
     // TOC REPLACEMENT PATTERNS
     // ------------------------------------------------------------------------------------------ //
-    public static final Pattern fileTocPattern = Pattern.compile("<!---?\\s?FILE_TOC\\s?-->(.*<!---?\\s?TOC_END\\s?-->)?", Pattern.DOTALL);
-    public static final Pattern projectTocPattern = Pattern.compile("<!---?\\s?PROJECT_TOC\\s?-->(.*<!---?\\s?TOC_END\\s?-->)?", Pattern.DOTALL);
+    public static final Pattern codeBlockPattern = Pattern.compile("```.*?```", Pattern.DOTALL);
+    public static final Pattern fileTocPattern = Pattern.compile("<!---?\\s?FILE_TOC\\s?-->(.*?<!---?\\s?TOC_END\\s?-->)?", Pattern.DOTALL);
+    public static final Pattern projectTocPattern = Pattern.compile("<!---?\\s?PROJECT_TOC\\s?-->(.*?<!---?\\s?TOC_END\\s?-->)?", Pattern.DOTALL);
     public static final Pattern tocFinderPattern = Pattern.compile("<!---?\\s?(PROJECT|FILE)_TOC\\s?-->");
     public static final String FILE_TOC_MARKER = "<!--- FILE_TOC -->";
     public static final String PROJECT_TOC_MARKER = "<!--- PROJECT_TOC -->";

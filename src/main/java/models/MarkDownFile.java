@@ -1,13 +1,12 @@
 package models;
 
 import core.Config;
+import core.Helpers;
 import core.Report;
 import core.TocTree;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -22,23 +21,28 @@ public class MarkDownFile {
     private final List<String> headings = new ArrayList<>();
     private final String parentFolder;
     private final Path gitdocFolder;
-    private final Path path;
+    private final Path pathToFile;
     private final TocTree tocTree;
     private boolean hasTocMarker = false;
 
     public MarkDownFile(Path gitdocFolder, Path pathToFile) {
-        this.path = pathToFile;
+        this.pathToFile = pathToFile;
         this.gitdocFolder = gitdocFolder;
         this.parentFolder = pathToFile.getParent().toString();
-        try (Stream<String> stream = Files.lines(pathToFile)) {
-            stream
-                    .peek(this.lookForTocMarker())
-                    .filter(this.isLineStartingWithHash())
-                    .filter(this.shouldBeExcluded())
-                    .forEach(this.addToHeadings());
-        } catch (IOException e) {
-            throw new IllegalStateException("Can't read file: " + pathToFile, e);
-        }
+
+        // Remove codeblocks
+        String fileAsString = Helpers.getFileAsString(pathToFile);
+        fileAsString = Config.codeBlockPattern
+                .matcher(fileAsString)
+                .replaceAll("");
+
+        // Read line by line
+        Stream.of(fileAsString.split("\n"))
+                .peek(this.lookForTocMarker())
+                .filter(this.doesLineStartWithHash())
+                .filter(this.shouldBeExcluded())
+                .forEach(this.addToHeadings());
+
         this.tocTree = new TocTree(this);
     }
 
@@ -50,7 +54,7 @@ public class MarkDownFile {
         };
     }
 
-    private Predicate<String> isLineStartingWithHash() {
+    private Predicate<String> doesLineStartWithHash() {
         return line -> line.trim().startsWith("#");
     }
 
@@ -78,7 +82,7 @@ public class MarkDownFile {
             }
         }
         if (!brokenRefs.isEmpty()) {
-            report.brokenRefs(this.path, brokenRefs);
+            report.brokenRefs(this.pathToFile, brokenRefs);
         }
     }
 
@@ -111,8 +115,8 @@ public class MarkDownFile {
         return this.tocTree;
     }
 
-    public Path getPath() {
-        return this.path;
+    public Path getPathToFile() {
+        return this.pathToFile;
     }
 
 }

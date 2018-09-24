@@ -34,7 +34,7 @@ public class MarkDownFileTest {
     public void evaluateReferences() {
         MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getGitFolder(), TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"));
         Report report = new Report();
-        markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPath()), report);
+        markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPathToFile()), report);
         assertThat(report.getReport().contains("Valid references  : 5"), is(true));
         assertThat(report.getReport().contains("Broken references : 2"), is(true));
     }
