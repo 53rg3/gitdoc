@@ -61,20 +61,16 @@ A gitdoc folder must contain a file named `.gitdoc`. Otherwise gitdoc will refus
 
 This marker will create a TOC of the headings in the file it is in. gitdoc will replace the first occurrence of this marker, all other will be ignored.
 
-:bangbang: Note: Remove the string `#REMOVE_THIS#`
-
 ```html
-<!--- FILE_TOC -#REMOVE_THIS#->
+<!--- FILE_TOC -->
 ```
 
 ## Project TOC
 
 This marker will create a TOC of **ALL** headings in the files in the gitdoc folder and its subfolders. gitdoc will replace the first occurrence of this marker, all other will be ignored.
 
-:bangbang: Note: Remove the string `#REMOVE_THIS#`
-
 ```html
-<!--- PROJECT_TOC -#REMOVE_THIS#->
+<!--- PROJECT_TOC -->
 ```
 
 # Understanding sorting of TOCs
