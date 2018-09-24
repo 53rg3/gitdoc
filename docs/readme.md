@@ -1,20 +1,27 @@
 <!--- PROJECT_TOC -->
-[1. Run](readme.md#run)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Options](readme.md#options)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.1 -p / --path (Set the folder gitdoc shall run in)](readme.md#-p----path-set-the-folder-gitdoc-shall-run-in)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.1.2 -s / --scaffold (Create a scaffold folder)](readme.md#-s----scaffold-create-a-scaffold-folder)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[1.2 Using with alias](readme.md#using-with-alias)<br>
-[2. Markers](readme.md#markers)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1 .gitdoc file](readme.md#gitdoc-file)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.2 File TOC](readme.md#file-toc)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.3 Project TOC](readme.md#project-toc)<br>
-[3. Understanding sorting of TOCs](readme.md#understanding-sorting-of-tocs)<br>
-[4. Possible problems](readme.md#possible-problems)<br>
-[5. Program Structure](001_Program_Structure/readme.md#program-structure)<br>
+[1. gitdoc](readme.md#gitdoc)<br>
+[2. Run](readme.md#run)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1 Options](readme.md#options)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1.1 -p / --path (Set the folder gitdoc shall run in)](readme.md#-p----path-set-the-folder-gitdoc-shall-run-in)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1.2 -s / --scaffold (Create a scaffold folder)](readme.md#-s----scaffold-create-a-scaffold-folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.2 Using with alias](readme.md#using-with-alias)<br>
+[3. Markers](readme.md#markers)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1 .gitdoc file](readme.md#gitdoc-file)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.2 File TOC](readme.md#file-toc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.3 Project TOC](readme.md#project-toc)<br>
+[4. Understanding sorting of TOCs](readme.md#understanding-sorting-of-tocs)<br>
+[5. Stuff](readme.md#stuff)<br>
+[6. Program Structure](001_Program_Structure/readme.md#program-structure)<br>
 <!--- TOC_END -->
 
 
 
+
+
+
+# gitdoc
+
+Creates TOCs from headings in .md files and checks the validity of references to internal resources (e.g. images, other .md files, etc).
 
 # Run
 
@@ -103,6 +110,10 @@ Results in:
    2.1 Sub Header // Note: Although this was in File3.md
 ```
 
-# Possible problems
+# Stuff
 
 - **Do not use a gitdoc folder inside another gitdoc folder**<br>gitdoc will scan and use the containing gitdoc folder, which leads to confusing results.
+- **Does it work for GitHub Wikis?**
+  - No. 
+    - Index file of the Wiki must be called `Home.md`
+    - The sidebar is defined by a file called `_Sidebar.md`, which uses a different format for references (clone [Guice Wiki](https://github.com/google/guice/wiki) for example).<br>We probably just need to extend TocTree.java and override some methods, so that it creates a properly formatted `_Sidebar.md`. Rest will should be usable as it is. 
