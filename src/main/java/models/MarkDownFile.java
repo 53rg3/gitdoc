@@ -20,14 +20,12 @@ public class MarkDownFile {
 
     private final List<String> headings = new ArrayList<>();
     private final String parentFolder;
-    private final Path gitdocFolder;
     private final Path pathToFile;
     private final TocTree tocTree;
     private boolean hasTocMarker = false;
 
-    public MarkDownFile(Path gitdocFolder, Path pathToFile) {
+    public MarkDownFile(Path pathToFile) {
         this.pathToFile = pathToFile;
-        this.gitdocFolder = gitdocFolder;
         this.parentFolder = pathToFile.getParent().toString();
 
         // Remove codeblocks

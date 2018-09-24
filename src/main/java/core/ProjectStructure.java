@@ -19,7 +19,7 @@ public class ProjectStructure {
     private final TocTree tocTree;
     private final Report report = new Report();
 
-    public ProjectStructure(Path gitdocFolder) {
+    ProjectStructure(Path gitdocFolder) {
         this.structure = this.createStructure(gitdocFolder);
         this.tocTree = new TocTree(this.structure, gitdocFolder);
     }
@@ -49,7 +49,7 @@ public class ProjectStructure {
                     .sorted()
                     .forEach(currPath -> {
                         exclusions.add(currPath.toString());
-                        list.add(new MarkDownFile(gitdocFolder, currPath));
+                        list.add(new MarkDownFile(currPath));
                     });
         } catch (IOException e) {
             throw new IllegalStateException("Can't walk path: " + gitdocFolder);
@@ -61,7 +61,7 @@ public class ProjectStructure {
                     .filter(currPath -> currPath.toString().endsWith(".md"))
                     .filter(currPath -> !exclusions.contains(currPath.toString()))
                     .sorted()
-                    .forEach(currPath -> list.add(new MarkDownFile(gitdocFolder, currPath)));
+                    .forEach(currPath -> list.add(new MarkDownFile(currPath)));
         } catch (IOException e) {
             throw new IllegalStateException("Can't walk path: " + gitdocFolder);
         }

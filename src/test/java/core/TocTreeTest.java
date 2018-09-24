@@ -4,8 +4,6 @@ import _testutils.TestHelpers;
 import models.MarkDownFile;
 import org.junit.Test;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -55,9 +53,7 @@ public class TocTreeTest {
 
     @Test
     public void createReference_singleMarkDownFile() {
-        MarkDownFile markDownFile = new MarkDownFile(
-                TestHelpers.getGitFolder(),
-                TestHelpers.getResourcePath("gitdoc_folder/001_FirstChapter/readme.md"));
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/001_FirstChapter/readme.md"));
 
         assertThat(markDownFile.getTocTree().get().get(0),
                 is("[1. First Chapter](#first-chapter)<br>"));

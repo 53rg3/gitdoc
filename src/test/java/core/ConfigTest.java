@@ -52,46 +52,4 @@ public class ConfigTest {
 
     }
 
-    /**
-     * REGRESSION_TEST
-     * Issue: Markers inside code blocks are processed normally, so that hashes are recognized as headers
-     */
-    @Test
-    public void tocPatterns_multipleOccurrences() {
-        String text = "" +
-                "<!--- PROJECT_TOC -->\n" +
-                "aasdf\n" +
-                "asdfasdf\n" +
-                "sadfadsf\n" +
-                "sadf\n" +
-                "<!--- TOC_END -->\n" +
-                "\n" +
-                "THIS MUST NOT BE DELETED\n" +
-                "\n" +
-                "```\n\n"+
-                "THIS_SHOULD_NOT_BE_HERE\n"+
-                "<!--- PROJECT_TOC -->\n" +
-                "\n```\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n" +
-                "jdsfhgjkdfg\n";
-        System.out.println(text);
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-
-        text = Config.codeBlockPattern.matcher(text).replaceAll("");
-        System.out.println(text);
-
-
-
-    }
-
 }

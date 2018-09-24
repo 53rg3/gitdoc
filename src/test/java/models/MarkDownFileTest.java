@@ -15,7 +15,7 @@ public class MarkDownFileTest {
     @Test
     public void create() {
 
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getGitFolder(), TestHelpers.TEST_FILE);
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.TEST_FILE);
 
         // Headings
         List<String> headings = markDownFile.getHeadings();
@@ -32,7 +32,7 @@ public class MarkDownFileTest {
 
     @Test
     public void evaluateReferences() {
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getGitFolder(), TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"));
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"));
         Report report = new Report();
         markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPathToFile()), report);
         assertThat(report.getReport().contains("Valid references  : 5"), is(true));
