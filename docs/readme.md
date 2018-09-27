@@ -4,6 +4,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1 Options](readme.md#options)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1.1 -p / --path (Set the folder gitdoc shall run in)](readme.md#-p----path-set-the-folder-gitdoc-shall-run-in)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1.2 -s / --scaffold (Create a scaffold folder)](readme.md#-s----scaffold-create-a-scaffold-folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.1.3 -g / --glossary (Create a scaffold glossary)](readme.md#-g----glossary-create-a-scaffold-glossary)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[2.2 Using with alias](readme.md#using-with-alias)<br>
 [3. Markers](readme.md#markers)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1 .gitdoc file](readme.md#gitdoc-file)<br>
@@ -13,6 +14,7 @@
 [5. Stuff](readme.md#stuff)<br>
 [6. Program Structure](001_Program_Structure/readme.md#program-structure)<br>
 <!--- TOC_END -->
+
 
 
 
@@ -40,12 +42,27 @@ java -jar gitdoc.jar -p=/absolute/path/to/gitdoc_folder
 
 ### -s / --scaffold (Create a scaffold folder)
 
-Contains everything for a quick start. 
+Contains everything for new notebook. 
 
 This will creates a folder with scaffold named `docs`:
 
 ```bash
 java -jar gitdoc.jar -p=/absolute/path/to -s=docs
+```
+
+### -g / --glossary (Create a scaffold glossary)
+
+Creates a "glossary" (files with letters A-Z and a readme.md as overview)
+
+```bash
+java -jar gitdoc.jar -p=/absolute/path/to -g=glossary
+```
+
+Headings for the project TOC will contain the count of terms inside a letter file. A term is recognized when it follows the following structure:
+
+```
+- **Some term in bold**
+  Some optional explanation explaining the term
 ```
 
 ## Using with alias
@@ -62,7 +79,7 @@ gitdoc uses markers to identify the scope it is allowed to run in and where to p
 
 ## .gitdoc file
 
-A gitdoc folder must contain a file named `.gitdoc`. Otherwise gitdoc will refuse to work in a defined folder.
+A gitdoc folder must contain a file named `.gitdoc`. Otherwise gitdoc will refuse to work in a defined folder. A glossary is recognized by `.gitdoc_glossary` which triggers a different processing for TOCs.
 
 ## File TOC
 
@@ -82,10 +99,7 @@ This marker will create a TOC of **ALL** headings in the files in the gitdoc fol
 
 # Understanding sorting of TOCs
 
-gitdoc will use the following procedure to collect the headings from the MarkDown files and to structure the **Project** TOC:
-
-1. Root of the gitdoc folder is scanned, **sorted by file names**. 
-2. Sub-folders of the gitdoc folder are scanned, **sorted by folder name**, then file name. You can sort folder by naming them for example 001_Intro, 002_Manual, etc.
+gitdoc scans the provided folder (`-p=your_folder`) recursively to build a tree structure of all .md files sorted by their name and the folder they are in. 
 
 The TOC numeration works by counting the amount of hashes (`#`) of headings. Each `#` adds another sub-level to the numeration. The numeration is reset each time gitdoc encounters a higher level header. If a file begins with a lower level header than `#` (e.g. `##`, `###`, etc) then the TOC entry will be seen as element of the last entry with the higher level header. Example:
 
