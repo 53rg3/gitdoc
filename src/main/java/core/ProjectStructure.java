@@ -41,33 +41,31 @@ public class ProjectStructure {
         this.mode = this.determineGitDocMode(gitdocFolder);
 
         List<MarkDownFile> list = new ArrayList<>();
-        Set<String> exclusions = new HashSet<>();
+        Queue<Path> pathQueue = new PriorityQueue<>();
 
-        // Root folder
-        try (Stream<Path> stream = Files.walk(gitdocFolder, 1)) {
-            stream
-                    .filter(currPath -> currPath.toString().endsWith(".md"))
-                    .sorted()
-                    .forEach(currPath -> {
-                        exclusions.add(currPath.toString());
-                        list.add(new MarkDownFile(currPath, this.mode));
-                    });
-        } catch (IOException e) {
-            throw new IllegalStateException("Can't walk path: " + gitdocFolder);
-        }
-
-        // Subfolders
-        try (Stream<Path> stream = Files.walk(gitdocFolder)) {
-            stream
-                    .filter(currPath -> currPath.toString().endsWith(".md"))
-                    .filter(currPath -> !exclusions.contains(currPath.toString()))
-                    .sorted()
-                    .forEach(currPath -> list.add(new MarkDownFile(currPath, this.mode)));
-        } catch (IOException e) {
-            throw new IllegalStateException("Can't walk path: " + gitdocFolder);
+        this.evaluateAndCollectFiles(gitdocFolder, list, pathQueue);
+        while (!pathQueue.isEmpty()) {
+            this.evaluateAndCollectFiles(pathQueue.poll(), list, pathQueue);
         }
 
         return list;
+    }
+
+    private void evaluateAndCollectFiles(Path nextPath, List<MarkDownFile> markDownFiles, Queue<Path> pathQueue) {
+        try (Stream<Path> stream = Files.walk(nextPath, 1)) {
+            stream
+                    .sorted()
+                    .forEach(currPath -> {
+                        if (currPath.toString().endsWith(".md")) {
+                            markDownFiles.add(new MarkDownFile(currPath, this.mode));
+                        }
+                        if (currPath.toFile().isDirectory() && currPath.compareTo(nextPath) != 0) {
+                            pathQueue.offer(currPath);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new IllegalStateException("Can't walk path: " + nextPath);
+        }
     }
 
     private Mode determineGitDocMode(Path path) {
