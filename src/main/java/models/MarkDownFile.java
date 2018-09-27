@@ -2,6 +2,7 @@ package models;
 
 import core.Config;
 import core.Helpers;
+import core.ProjectStructure.Mode;
 import core.Report;
 import core.TocTree;
 
@@ -22,17 +23,25 @@ public class MarkDownFile {
     private final String parentFolder;
     private final Path pathToFile;
     private final TocTree tocTree;
+    private final Mode mode;
     private boolean hasTocMarker = false;
+    private boolean isFirstHeading = true;
+    private int glossaryTermCount = 0;
 
-    public MarkDownFile(Path pathToFile) {
+    public MarkDownFile(Path pathToFile, Mode mode) {
         this.pathToFile = pathToFile;
         this.parentFolder = pathToFile.getParent().toString();
+        this.mode = mode;
 
         // Remove codeblocks
         String fileAsString = Helpers.getFileAsString(pathToFile);
         fileAsString = Config.codeBlockPattern
                 .matcher(fileAsString)
                 .replaceAll("");
+
+        if (mode.equals(Mode.GLOSSARY)) {
+            this.glossaryTermCount = this.countGlossaryTerms(fileAsString);
+        }
 
         // Read line by line
         Stream.of(fileAsString.split("\n"))
@@ -42,6 +51,15 @@ public class MarkDownFile {
                 .forEach(this.addToHeadings());
 
         this.tocTree = new TocTree(this);
+    }
+
+    private int countGlossaryTerms(String fileAsString) {
+        Matcher matcher = Config.glossaryTermPattern.matcher(fileAsString);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
     }
 
     private Consumer<String> lookForTocMarker() {
@@ -94,7 +112,14 @@ public class MarkDownFile {
     }
 
     private Consumer<String> addToHeadings() {
-        return line -> this.headings.add(line.trim());
+        return line -> {
+            if (this.isFirstHeading && this.mode.equals(Mode.GLOSSARY)) {
+                this.isFirstHeading = false;
+                this.headings.add(line.trim() + " (" + this.glossaryTermCount + ")");
+            } else {
+                this.headings.add(line.trim());
+            }
+        };
     }
 
     public List<String> getHeadings() {

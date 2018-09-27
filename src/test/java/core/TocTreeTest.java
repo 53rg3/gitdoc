@@ -1,6 +1,7 @@
 package core;
 
 import _testutils.TestHelpers;
+import core.ProjectStructure.Mode;
 import models.MarkDownFile;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class TocTreeTest {
 
     @Test
     public void createReference_singleMarkDownFile() {
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/001_FirstChapter/readme.md"));
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/001_FirstChapter/readme.md"), Mode.GITDOC);
 
         assertThat(markDownFile.getTocTree().get().get(0),
                 is("[1. First Chapter](#first-chapter)<br>"));

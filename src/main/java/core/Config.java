@@ -10,6 +10,14 @@ public class Config {
 
     public static final Pattern refPattern = Pattern.compile("(\\[.*?\\]\\((.*?)\\))");
     public static final Pattern urlFragmentPattern = Pattern.compile("#.*$");
+    public static final Pattern glossaryTermPattern = Pattern.compile("[-*]\\s\\*\\*.*?\\*\\*<br/?>");
+
+    // ------------------------------------------------------------------------------------------ //
+    // MARKERS
+    // ------------------------------------------------------------------------------------------ //
+
+    public static final String GITDOC_FOLDER_FILE = ".gitdoc";
+    public static final String GLOSSARY_FOLDER_FILE = ".gitdoc_glossary";
 
     // ------------------------------------------------------------------------------------------ //
     // TOC REPLACEMENT PATTERNS
@@ -32,7 +40,7 @@ public class Config {
     // ------------------------------------------------------------------------------------------ //
 
 
-    public static final String tocsHeader = "" +
+    public static final String TOCS_HEADER = "" +
             "\n" +
             "                 _______ ____   _____                     \n" +
             "        ______  |__   __/ __ \\ / ____|       ______       \n" +
@@ -45,19 +53,19 @@ public class Config {
             "";
 
 
-    public static final String refsHeader = "" +
+    public static final String REFS_HEADER = "" +
             "\n" +
-            "                 _____       __                     \n" +
-            "        ______  |  __ \\     / _|       ______       \n" +
-            "  _____|______| | |__) |___| |_ ___   |______|_____ \n" +
-            " |______|_____  |  _  // _ \\  _/ __|   _____|______|\n" +
-            "       |______| | | \\ \\  __/ | \\__ \\  |______|      \n" +
-            "                |_|  \\_\\___|_| |___/                \n" +
-            "                                                    \n" +
-            "                                                    \n" +
+            "                 ____            _                _____       __                    \n" +
+            "        ______  |  _ \\          | |              |  __ \\     / _|      ______       \n" +
+            "  _____|______| | |_) |_ __ ___ | | _____ _ __   | |__) |___| |_ ___  |______|_____ \n" +
+            " |______|_____  |  _ <| '__/ _ \\| |/ / _ \\ '_ \\  |  _  // _ \\  _/ __|  _____|______|\n" +
+            "       |______| | |_) | | | (_) |   <  __/ | | | | | \\ \\  __/ | \\__ \\ |______|      \n" +
+            "                |____/|_|  \\___/|_|\\_\\___|_| |_| |_|  \\_\\___|_| |___/               \n" +
+            "                                                                                    \n" +
+            "                                                                                    \n" +
             "";
 
-    public static final String breakdownHeader = "" +
+    public static final String BREAKDOWN_HEADER = "" +
             "\n" +
             "\n" +
             "                 ____                 _       _                                    \n" +

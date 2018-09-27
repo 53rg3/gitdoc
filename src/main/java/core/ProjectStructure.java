@@ -18,10 +18,11 @@ public class ProjectStructure {
     private final List<MarkDownFile> structure;
     private final TocTree tocTree;
     private final Report report = new Report();
+    private Mode mode;
 
     ProjectStructure(Path gitdocFolder) {
         this.structure = this.createStructure(gitdocFolder);
-        this.tocTree = new TocTree(this.structure, gitdocFolder);
+        this.tocTree = new TocTree(this.structure, gitdocFolder, this.mode);
     }
 
     public void run() {
@@ -37,7 +38,7 @@ public class ProjectStructure {
 
     private List<MarkDownFile> createStructure(Path gitdocFolder) {
 
-        this.throwIfNotGitDocFolder(gitdocFolder);
+        this.mode = this.determineGitDocMode(gitdocFolder);
 
         List<MarkDownFile> list = new ArrayList<>();
         Set<String> exclusions = new HashSet<>();
@@ -49,7 +50,7 @@ public class ProjectStructure {
                     .sorted()
                     .forEach(currPath -> {
                         exclusions.add(currPath.toString());
-                        list.add(new MarkDownFile(currPath));
+                        list.add(new MarkDownFile(currPath, this.mode));
                     });
         } catch (IOException e) {
             throw new IllegalStateException("Can't walk path: " + gitdocFolder);
@@ -61,7 +62,7 @@ public class ProjectStructure {
                     .filter(currPath -> currPath.toString().endsWith(".md"))
                     .filter(currPath -> !exclusions.contains(currPath.toString()))
                     .sorted()
-                    .forEach(currPath -> list.add(new MarkDownFile(currPath)));
+                    .forEach(currPath -> list.add(new MarkDownFile(currPath, this.mode)));
         } catch (IOException e) {
             throw new IllegalStateException("Can't walk path: " + gitdocFolder);
         }
@@ -69,21 +70,33 @@ public class ProjectStructure {
         return list;
     }
 
-    private void throwIfNotGitDocFolder(Path path) {
+    private Mode determineGitDocMode(Path path) {
 
         File file = path.toFile();
         Objects.requireNonNull(file, "path must not be null");
 
         if (!file.isDirectory()) {
-            throw new IllegalArgumentException("Path: '" + path + "' is not a directory");
+            throw new Error("Path: '" + path + "' is not a directory");
         }
 
-        Stream.of(file.list())
-                .filter(fileName -> fileName.equals(".gitdoc"))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("\n" +
-                        "Directory '" + path + "' is not a gitdoc directory. \n" +
-                        "Must contain a file named '.gitdoc'"));
+        Optional<Mode> optional = Stream.of(file.list())
+                .filter(fileName -> fileName.equals(Config.GITDOC_FOLDER_FILE) || fileName.equals(Config.GLOSSARY_FOLDER_FILE))
+                .map(fileName -> {
+                    if (fileName.equals(Config.GITDOC_FOLDER_FILE)) {
+                        return Mode.GITDOC;
+                    }
+                    if (fileName.equals(Config.GLOSSARY_FOLDER_FILE)) {
+                        return Mode.GLOSSARY;
+                    }
+                    throw new IllegalArgumentException("Can't determine mode. Marker file not implemented: " + fileName);
+                })
+                .findFirst();
+        if (!optional.isPresent()) {
+            throw new Error("\n" +
+                    "Directory '" + path + "' is not a gitdoc directory. \n" +
+                    "Must contain a file named '" + Config.GITDOC_FOLDER_FILE + "' or '" + Config.GLOSSARY_FOLDER_FILE + "'");
+        }
+        return optional.get();
     }
 
     private void writeToc(MarkDownFile markDownFile, String fileAsString) {
@@ -112,7 +125,7 @@ public class ProjectStructure {
     }
 
     public void printReport() {
-        System.out.println(this.report.getReport());
+        Helpers.print(this.report.getReport());
     }
 
     private BufferedWriter createWriter(Path path) {
@@ -132,5 +145,11 @@ public class ProjectStructure {
 
     public List<MarkDownFile> getStructure() {
         return this.structure;
+    }
+
+    public enum Mode {
+        GITDOC,
+        GLOSSARY,
+        DUMMY_MODE
     }
 }

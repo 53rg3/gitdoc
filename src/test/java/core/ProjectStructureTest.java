@@ -14,12 +14,19 @@ public class ProjectStructureTest {
         assertThat(projectStructure.getStructure().size(), is(6));
     }
 
-    @Test(expected = IllegalStateException.class)
+
+
+    @Test(expected = Error.class)
     public void walkGitDoc_notAGitDocFolder() {
         new ProjectStructure(TestHelpers.getResourcePath("not_a_gitdoc_folder"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
+    public void walkGitDoc_glossaryFolder() {
+        new ProjectStructure(TestHelpers.getResourcePath("glossary_folder"));
+    }
+
+    @Test(expected = Error.class)
     public void walkGitDoc_notAFolder() {
         new ProjectStructure(TestHelpers.getResourcePath("not_a_gitdoc_folder/random_file"));
     }

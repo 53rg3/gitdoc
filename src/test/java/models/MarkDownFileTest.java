@@ -2,6 +2,7 @@ package models;
 
 import _testutils.TestHelpers;
 import core.Helpers;
+import core.ProjectStructure.Mode;
 import core.Report;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class MarkDownFileTest {
     @Test
     public void create() {
 
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.TEST_FILE);
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.TEST_FILE, Mode.GITDOC);
 
         // Headings
         List<String> headings = markDownFile.getHeadings();
@@ -32,7 +33,7 @@ public class MarkDownFileTest {
 
     @Test
     public void evaluateReferences() {
-        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"));
+        MarkDownFile markDownFile = new MarkDownFile(TestHelpers.getResourcePath("gitdoc_folder/004_Refs/readme.md"), Mode.GITDOC);
         Report report = new Report();
         markDownFile.evaluateReferences(Helpers.getFileAsString(markDownFile.getPathToFile()), report);
         assertThat(report.getReport().contains("Valid references  : 5"), is(true));

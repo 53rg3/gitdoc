@@ -16,4 +16,8 @@ public class Helpers {
         }
     }
 
+    public static void print(String line) {
+        System.out.println(line);
+    }
+
 }

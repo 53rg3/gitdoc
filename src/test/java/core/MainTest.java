@@ -4,7 +4,6 @@ import _testutils.TestHelpers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import picocli.CommandLine;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +64,17 @@ public class MainTest {
         assertThat(hasMarker, is(false));
         hasMarker = Config.fileTocPattern.matcher(Helpers.getFileAsString(TestHelpers.getResourcePath("gitdoc_folder/003_ThirdChapter/readme.md"))).find();
         assertThat(hasMarker, is(true));
+    }
+
+    @Test
+    public void call_asGlossary() {
+        String[] args = new String[]{"-p=" + TestHelpers.getResourcePath("glossary_mock")};
+        Main.main(args);
+        String indexReadme = Helpers.getFileAsString(TestHelpers.getResourcePath("glossary_mock/readme.md"));
+        assertThat(indexReadme.contains("[A (6)](A.md)<br>"), is(true));
+        assertThat(indexReadme.contains("[B (4)](B.md)<br>"), is(true));
+        assertThat(indexReadme.contains("[P (0)](P.md)<br>"), is(true));
+        assertThat(indexReadme.contains("[V (0)](V.md)<br>"), is(true));
     }
 
 }

@@ -17,15 +17,15 @@ public class ScaffoldTest {
 
     @AfterClass
     public static void tearDown() {
-//        try {
-//            Files.walk(Paths.get(TestHelpers.getResourcePath(".").toString() + "/scaffold"))
-//                    .sorted(Comparator.reverseOrder())
-//                    .forEach(path -> {
-//                        path.toFile().delete();
-//                    });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Files.walk(Paths.get(TestHelpers.getResourcePath(".").toString() + "/scaffold"))
+                    .sorted(Comparator.reverseOrder())
+                    .forEach(path -> {
+                        path.toFile().delete();
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

@@ -17,13 +17,10 @@ public class Report {
     private final AtomicInteger validRefCount = new AtomicInteger();
     private final AtomicInteger brokenRefCount = new AtomicInteger();
 
-    public Report() {
-    }
-
     public void hasToc(Path path) {
         if (!this.hasTocs) {
             this.hasTocs = true;
-            this.tocReport.append(Config.tocsHeader);
+            this.tocReport.append(Config.TOCS_HEADER);
         }
         this.hasTocCount.incrementAndGet();
         this.tocReport.append("[+] Added TOC to  : ");
@@ -41,7 +38,7 @@ public class Report {
     public void brokenRefs(Path path, List<String> brokenRefs) {
         if (!this.hasRefs) {
             this.hasRefs = true;
-            this.refReport.append(Config.refsHeader);
+            this.refReport.append(Config.REFS_HEADER);
         }
         this.brokenRefCount.addAndGet(brokenRefs.size());
         this.refReport.append("\n-----> Broken Refs in ");
@@ -64,7 +61,7 @@ public class Report {
         String refBreakdown = "\nREF BREAKDOWN:\n" +
                 "Valid references  : " + this.validRefCount.get() + "\n" +
                 "Broken references : " + this.brokenRefCount.get() + "\n";
-        return Config.breakdownHeader + tocBreakdown + refBreakdown;
+        return Config.BREAKDOWN_HEADER + tocBreakdown + refBreakdown;
     }
 
     public String getReport() {

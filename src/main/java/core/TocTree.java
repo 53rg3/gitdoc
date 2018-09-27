@@ -1,6 +1,7 @@
 package core;
 
 import core.Config.TocType;
+import core.ProjectStructure.Mode;
 import models.MarkDownFile;
 
 import java.nio.file.Path;
@@ -15,18 +16,23 @@ public class TocTree {
 
     private static final Pattern everythingButHashesPattern = Pattern.compile("[^#]");
     private static final Pattern onlyHashesPattern = Pattern.compile("[#]");
-    private final static Pattern specialChars = Pattern.compile("[^\\d\\w\\s-]");
+    private static final Pattern specialChars = Pattern.compile("[^\\d\\w\\s-]");
     private final List<AtomicInteger> numerationList = new ArrayList<>();
     private final List<String> toc;
     private final Path gitdocFolder;
+    private final Mode mode;
 
-    public TocTree(List<MarkDownFile> list, Path gitdocFolder) {
+    public TocTree(List<MarkDownFile> list, Path gitdocFolder, Mode mode) {
+        Objects.requireNonNull(mode, "'mode' must not be null.");
+
+        this.mode = mode;
         this.gitdocFolder = gitdocFolder;
         this.resetNumerationList();
         this.toc = this.createTocTree(list);
     }
 
     public TocTree(MarkDownFile markDownFile) {
+        this.mode = Mode.DUMMY_MODE;
         this.gitdocFolder = markDownFile.getPathToFile();
         this.resetNumerationList();
         this.toc = this.createTocTree(Collections.singletonList(markDownFile));
@@ -74,9 +80,10 @@ public class TocTree {
         builder.append(this.gitdocFolder.relativize(path));
 
         // Create link fragment
-        builder.append("#");
-        builder.append(this.createAnchor(cleanHeading));
-
+        if (!this.mode.equals(Mode.GLOSSARY)) {
+            builder.append("#");
+            builder.append(this.createAnchor(cleanHeading));
+        }
 
         // Close reference destination bracket
         builder.append(")");
@@ -86,6 +93,15 @@ public class TocTree {
     }
 
     private void createLinkText(StringBuilder builder, String cleanHeading, int blocks) {
+
+        // Skip if glossary, because numeration is useless
+        if (this.mode.equals(Mode.GLOSSARY)) {
+            builder.append("[");
+            builder.append(cleanHeading);
+            builder.append("]");
+            return;
+        }
+
         // Open link text bracket
         builder.append("[");
 
